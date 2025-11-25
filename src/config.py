@@ -26,12 +26,23 @@ os.makedirs(CHECKPOINT_DIR, exist_ok=True)
 os.makedirs(RESULT_DIR, exist_ok=True)
 
 
-#TRAINING HYPERPARAMETERS
+# TRAINING HYPERPARAMETERS
 IMAGE_SIZE = 128
 BATCH_SIZE = 8
-LEARNING_RATE = 1e-3
-EPOCHS = 15
-EARLY_STOPPING_PATIENCE = 3
+
+# Smaller LR because:
+# - we added BatchNorm and augmentation
+# - we want more careful updates
+LEARNING_RATE = 5e-4
+
+# More epochs because:
+# - augmented data is harder
+# - model needs more time to converge
+EPOCHS = 30
+
+# A bit more patience to allow LR scheduler to work
+EARLY_STOPPING_PATIENCE = 5
+
 
 #Model config
 ENCODER_CHANNELS = [32 , 64 , 128]

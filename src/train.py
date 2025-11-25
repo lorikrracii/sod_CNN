@@ -19,6 +19,13 @@ def train():
     #optimizer
     optimizer = optim.Adam(model.parameters(), lr=config.LEARNING_RATE)
 
+    #every 10 epochs, multiply LR by 0.5
+    scheduler = optim.lr_scheduler.StepLR(
+        optimizer,
+        step_size=10,
+        gamma=0.5
+    )
+
     best_val_loss = float('inf')
     patience_counter = 0
 
@@ -51,7 +58,7 @@ def train():
         total_val_loss = 0
 
         with torch.no_grad():
-            for images, masks in tqdm(val_loader, desc="Validatting"):
+            for images, masks in tqdm(val_loader, desc="Validating"):
                 images = images.to(config.DEVICE)
                 masks = masks.to(config.DEVICE)
 
@@ -79,5 +86,8 @@ def train():
             if patience_counter >= config.EARLY_STOPPING_PATIENCE:
                 print("Early stopping triggered!")
                 break
+
+        scheduler.step()
+        print(f"Current learning rate: {scheduler.get_lr()[0]:.6f}")
 if __name__ == "__main__":
     train()
