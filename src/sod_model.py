@@ -4,17 +4,22 @@ import config
 
 class ConvBlock(nn.Module):
 
-    #basic block : conv2d + relu
+    #double convolution block : conv2d +-> bn -> relu x2
     def __init__(self, in_channels, out_channels):
         super().__init__()
         self.block = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
             nn.BatchNorm2d(out_channels),
             nn.ReLU(inplace=True)
         )
 
     def forward(self, x):
         return self.block(x)
+
 
 class SODModel(nn.Module):
     #encoder - decoder CNN
